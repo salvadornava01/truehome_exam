@@ -17,7 +17,7 @@ class Property(models.Model):
 
 
 class Activity(models.Model):
-    property_id = models.ForeignKey(Property, on_delete=models.PROTECT)
+    property = models.ForeignKey(Property, on_delete=models.PROTECT)
     schedule = models.DateTimeField(null=False)
     title = models.CharField(max_length=255, null=False)
     created_at = models.DateTimeField(auto_now_add=True, auto_now=False, null=False)
@@ -29,6 +29,6 @@ class Activity(models.Model):
 
 
 class Survey(models.Model):
-    activity_id = models.ForeignKey(Activity, on_delete=models.PROTECT)
+    activity = models.ForeignKey(Activity, on_delete=models.PROTECT)
     answers = JSONField()
     created_at = models.DateTimeField(auto_now_add=True, auto_now=False, null=False)
