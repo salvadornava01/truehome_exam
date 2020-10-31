@@ -57,6 +57,7 @@ class CreateAndListActivityAPIView(APIView):
         start_date = None
         end_date = None
         status = request.GET.get('status')
+        base_site_url = request.META['HTTP_HOST']
 
         if all([start_date_str, end_date_str]):
             try:
@@ -71,10 +72,10 @@ class CreateAndListActivityAPIView(APIView):
         activities = None
         # If there is a filter option, use filter list
         if any([start_date, end_date, status]):
-            activities = get_activities_filter(start_date, end_date, status)
+            activities = get_activities_filter(start_date, end_date, status, base_site_url)
         # Otherwise use default list
         else:
-            activities = get_activities()
+            activities = get_activities(base_site_url)
 
         return Response(data=activities, status=HTTP_200_OK)
 
