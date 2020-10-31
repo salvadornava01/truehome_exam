@@ -1,5 +1,6 @@
-### IntelliJ IDEA ###
+### PyCharm ###
 .idea
 *.iws
 *.iml
 *.ipr
+*.pyc
