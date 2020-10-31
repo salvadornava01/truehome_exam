@@ -1,1 +1,1 @@
-web: gunicorn src/truehome truehome.wsgi
+web: gunicorn src.truehome truehome.wsgi
