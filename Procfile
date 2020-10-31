@@ -1,1 +1,1 @@
-web: gunicorn src.truehome wsgi
+web: gunicorn --pythonpath './src' truehome.wsgi
