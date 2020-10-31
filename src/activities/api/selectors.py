@@ -11,7 +11,7 @@ from ..utils.custom_exception import DatesIncomplete
 
 
 # This is the default getter for activities
-def get_activities():
+def get_activities(base_url):
     utc = pytz.UTC
     today_date = datetime.today()
     start_date = today_date - timedelta(days=3)
@@ -21,22 +21,22 @@ def get_activities():
     schedule_less_than_end = Q(schedule__lte=end_date)
     activities_found = Activity.objects.filter(schedule_greater_than_start, schedule_less_than_end)
 
-    response = {}
+    response = {'activities': []}
 
     for activity in activities_found:
         condition = None
-        if activity.status == 'active' and utc.localize(today_date) >= activity.schedule:
+        if activity.status == 'active' and utc.localize(today_date) <= activity.schedule:
             condition = 'Pendiente a realizar'
-        elif activity.status == 'active' and utc.localize(today_date) < activity.schedule:
+        elif activity.status == 'active' and utc.localize(today_date) > activity.schedule:
             condition = 'Atrasada'
         elif activity.status == 'done':
             condition = 'Finalizada'
         activity_property = activity.property
         activity_survey_link = None
         if activity.get_survey():
-            activity_survey_link = activity.survey.get_absolute_url()
+            activity_survey_link = base_url + activity.survey.get_absolute_url()
 
-        response = {
+        formatted_activity = {
             'id': activity.id,
             'title': activity.title,
             'created_at': activity.created_at,
@@ -46,11 +46,12 @@ def get_activities():
                          'address': activity_property.address},
             'survey': activity_survey_link
         }
+        response['activities'].append(formatted_activity)
     return response
 
 
 # This is the getter with filter for activities
-def get_activities_filter(start_date, end_date, status):
+def get_activities_filter(start_date, end_date, status, base_url):
     utc = pytz.UTC
     today_date = datetime.today()
     if all([start_date, end_date]):
@@ -65,22 +66,22 @@ def get_activities_filter(start_date, end_date, status):
     else:
         raise DatesIncomplete()
 
-    response = {}
+    response = {'activities': []}
 
     for activity in activities_found:
         condition = None
-        if activity.status == 'active' and utc.localize(today_date) >= activity.schedule:
+        if activity.status == 'active' and utc.localize(today_date) <= activity.schedule:
             condition = 'Pendiente a realizar'
-        elif activity.status == 'active' and utc.localize(today_date) < activity.schedule:
+        elif activity.status == 'active' and utc.localize(today_date) > activity.schedule:
             condition = 'Atrasada'
         elif activity.status == 'done':
             condition = 'Finalizada'
         activity_property = activity.property
         activity_survey_link = None
         if activity.get_survey():
-            activity_survey_link = activity.survey.get_absolute_url()
+            activity_survey_link = base_url + activity.survey.get_absolute_url()
 
-        response = {
+        formatted_activity = {
             'id': activity.id,
             'title': activity.title,
             'created_at': activity.created_at,
@@ -90,4 +91,5 @@ def get_activities_filter(start_date, end_date, status):
                          'address': activity_property.address},
             'survey': activity_survey_link
         }
+        response['activities'].append(formatted_activity)
     return response

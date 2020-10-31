@@ -31,7 +31,7 @@ def create_activity(
         # If activity schedule between actual activity_time and activity_time + 1 hour
         if (schedule >= activity_time) and (schedule <= (activity_time + timedelta(hours=1))):
             raise ActivityConflict()
-    activity = Activity.objects.create(property_id=property_found, title=title, schedule=schedule, status=status)
+    activity = Activity.objects.create(property=property_found, title=title, schedule=schedule, status=status)
     return activity
 
 
