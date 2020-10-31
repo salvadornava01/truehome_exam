@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.encoding import smart_text
+from django.urls import reverse
 from django.contrib.postgres.fields import JSONField
 
 
@@ -27,8 +28,19 @@ class Activity(models.Model):
     def __str__(self):
         return smart_text(self.title)
 
+    def get_survey(self):
+        if hasattr(self, 'survey'):
+            return self.survey
+        return None
+
 
 class Survey(models.Model):
-    activity = models.ForeignKey(Activity, on_delete=models.PROTECT)
+    activity = models.OneToOneField(Activity, on_delete=models.PROTECT)
     answers = JSONField()
     created_at = models.DateTimeField(auto_now_add=True, auto_now=False, null=False)
+
+    def __str__(self):
+        return smart_text(self.activity)
+
+    def get_absolute_url(self):
+        return reverse('api-properties:survey-retrieve', kwargs={'id': self.id})
