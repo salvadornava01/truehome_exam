@@ -34,7 +34,7 @@ def get_activities(base_url):
         activity_property = activity.property
         activity_survey_link = None
         if activity.get_survey():
-            activity_survey_link = base_url + activity.survey.get_absolute_url()
+            activity_survey_link = 'http://' + base_url + activity.survey.get_absolute_url()
 
         formatted_activity = {
             'id': activity.id,
@@ -79,7 +79,7 @@ def get_activities_filter(start_date, end_date, status, base_url):
         activity_property = activity.property
         activity_survey_link = None
         if activity.get_survey():
-            activity_survey_link = base_url + activity.survey.get_absolute_url()
+            activity_survey_link = 'http://' + base_url + activity.survey.get_absolute_url()
 
         formatted_activity = {
             'id': activity.id,
