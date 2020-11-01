@@ -99,6 +99,7 @@ class RescheduleOrCancelActivityAPIView(APIView):
         activity_id = kwargs['id']
         new_date = serializer.validated_data['new_date']
         reschedule_activity(activity_id=activity_id, new_date=new_date)
+        return Response(status=HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
         activity_id = kwargs['id']
